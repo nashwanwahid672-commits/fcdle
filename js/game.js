@@ -141,7 +141,7 @@ async function findPhoto(p) {
         const file = c.P18?.[0]?.mainsnak?.datavalue?.value;
         const age = ageAtSnapshot(c.P569?.[0]?.mainsnak?.datavalue?.value?.time);
         if (!isFootballer || !file || age == null || Math.abs(age - p.age) > 1) continue;
-        const info = await getJSON("https://commons.wikimedia.org/w/api.php?format=json&origin=*&action=query&prop=imageinfo&iiprop=url|extmetadata&iiurlwidth=320&titles=" + encodeURIComponent("File:" + file));
+        const info = await getJSON("https://commons.wikimedia.org/w/api.php?format=json&origin=*&action=query&prop=imageinfo&iiprop=url|extmetadata&iiurlwidth=600&titles=" + encodeURIComponent("File:" + file));
         const ii = Object.values(info.query.pages)[0]?.imageinfo?.[0]; if (!ii?.thumburl) continue;
         const strip = h => { const d = document.createElement("div"); d.innerHTML = h || ""; return d.textContent.trim().replace(/\s+/g, " "); };
         return { src: ii.thumburl, page: ii.descriptionurl, artist: strip(ii.extmetadata?.Artist?.value).slice(0, 60) || "Unknown author", license: strip(ii.extmetadata?.LicenseShortName?.value) || "see file page" };
