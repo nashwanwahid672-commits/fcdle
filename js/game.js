@@ -147,8 +147,9 @@ async function findPhoto(p) {
         return { src: ii.thumburl, page: ii.descriptionurl, artist: strip(ii.extmetadata?.Artist?.value).slice(0, 60) || "Unknown author", license: strip(ii.extmetadata?.LicenseShortName?.value) || "see file page" };
       }
     }
+    console.info("[FCdle photo] no Wikidata match with a photo for", p.name, tries);
     return null;
-  })().catch(() => null);
+  })().catch(err => { console.warn("[FCdle photo] lookup failed for", p.name, err); return null; });
   PHOTO_CACHE.set(p.i, job);
   return job;
 }
@@ -159,6 +160,7 @@ function showPhoto(t) {
     if (!ph || S.target !== target || !document.body.contains(fig)) return;
     const img = new Image();
     img.alt = t.name; img.referrerPolicy = "no-referrer";
+    img.onerror = () => console.warn("[FCdle photo] image failed to load", ph.src);
     img.onload = () => {
       fig.innerHTML = "";
       fig.append(img);
