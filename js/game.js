@@ -198,11 +198,11 @@ function renderEnd(justFinished) {
   end.classList.toggle("lost", !won);
   const sub = won ? (S.guesses.length === 1 ? "First try. Unreal." : `Got it in ${S.guesses.length} of ${MAX} guesses.`)
     : forfeit ? `You forfeited after ${S.guesses.length} ${S.guesses.length === 1 ? "guess" : "guesses"}.` : `All ${MAX} guesses used.`;
-  end.innerHTML = `<figure class="photo" id="endphoto" hidden></figure><h2 class="${won ? "win" : "loss"}">${won ? "Victory!" : "Defeat"}</h2><p class="sub">${sub}</p>
+  end.innerHTML = `<figure class="photo" id="endphoto" hidden></figure><div class="endtext"><h2 class="${won ? "win" : "loss"}">${won ? "Victory!" : "Defeat"}</h2><p class="sub">${sub}</p>
     <p>The card was <b>${esc(t.name)}</b>, ${t.ovr} ${t.pos}, ${esc(t.club)} (${esc(t.nation)}).</p>
     <div class="stats"><span><b>${st.played}</b>Played</span><span><b>${st.played ? Math.round(st.wins / st.played * 100) : 0}%</b>Won</span><span><b>${st.streak}</b>Streak</span><span><b>${st.best}</b>Best</span></div>
     <pre class="share" id="sharetxt">${shareText()}</pre>
-    <div class="row"><button class="btn primary" id="copy">Copy result</button>${S.mode === "daily" ? `<button class="btn" id="tofree">Play unlimited</button>` : `<button class="btn" id="again">New card</button>`}</div>`;
+    <div class="row"><button class="btn primary" id="copy">Copy result</button>${S.mode === "daily" ? `<button class="btn" id="tofree">Play unlimited</button>` : `<button class="btn" id="again">New card</button>`}</div></div>`;
   end.hidden = false;
   showPhoto(t);
   document.getElementById("copy").onclick = async (e) => {

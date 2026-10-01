@@ -71,12 +71,12 @@ select, .btn { font: 600 13px/1 var(--body); color: var(--fg); background: var(-
 .end h2.win { color: var(--hit); } .end h2.loss { color: var(--att); }
 .end .sub { color: var(--muted); }
 .end { grid-template-columns: minmax(0, 1fr) auto; column-gap: 20px; }
-.end > *:not(.photo) { grid-column: 1; }
-.end .photo { grid-column: 2; grid-row: 1 / span 6; margin: 0; width: 240px; display: grid; gap: 6px; align-content: start; }
+.end .endtext { grid-column: 1; grid-row: 1; display: grid; gap: 12px; align-content: start; min-width: 0; }
+.end .photo { grid-column: 2; grid-row: 1; margin: 0; width: 240px; display: grid; gap: 6px; align-content: start; }
 .end .photo img { width: 240px; aspect-ratio: 4 / 5; height: auto; object-fit: cover; object-position: 50% 20%; border-radius: 12px; border: 1.5px solid var(--line); background: var(--miss); }
 .end .photo figcaption { font-size: 11px; line-height: 1.3; color: var(--muted); overflow-wrap: anywhere; }
 .end .photo figcaption a { color: inherit; }
-@media (max-width: 640px) { .end { grid-template-columns: minmax(0, 1fr); } .end .photo { grid-column: 1; grid-row: auto; width: 100%; max-width: 280px; } .end .photo img { width: 100%; } }
+@media (max-width: 640px) { .end { grid-template-columns: minmax(0, 1fr); } .end .endtext { grid-row: 2; } .end .photo { grid-column: 1; grid-row: 1; width: 100%; max-width: 280px; } .end .photo img { width: 100%; } }
 
 .btn.primary { background: var(--accent); border-color: var(--accent); color: var(--bg); }
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
