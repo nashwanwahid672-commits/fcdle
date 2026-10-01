@@ -57,6 +57,7 @@ The daily puzzle picks a player by their row position, so changing the data chan
 ## Credits
 
 - Player ratings: [EA SPORTS FC 27 Player Ratings](https://www.kaggle.com/datasets/mikedpad/ea-sports-fc27-player-ratings) by MikeDPad on Kaggle
+- Answer photos: freely licensed images from [Wikimedia Commons](https://commons.wikimedia.org), found through Wikidata at the end of each game and credited under the photo
 - Ages and nation continents: the [Footle](https://github.com/Akif-b-Atif/Football-wordle) project's cleaned dataset
 
 FCdle is a fan-made project and is not affiliated with or endorsed by EA SPORTS. EA SPORTS FC is a trademark of Electronic Arts Inc.

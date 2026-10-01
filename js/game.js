@@ -117,6 +117,60 @@ function renderRows(freshIndex) {
   if (freshIndex != null) tb.querySelectorAll("tr.fresh td:not(.name)").forEach((td, i) => td.style.animationDelay = (i * 40) + "ms");
 }
 
+// Answer photo from Wikimedia Commons (freely licensed), looked up through Wikidata.
+// Only used on the end-of-game panel. Fails silently: no match, no photo.
+const PHOTO_CACHE = new Map();
+const WD = "https://www.wikidata.org/w/api.php?format=json&origin=*&";
+async function getJSON(url) { const r = await fetch(url); if (!r.ok) throw new Error(r.status); return r.json(); }
+function ageAtSnapshot(time) {
+  const m = /^[+]?(\d{4})-(\d{2})-(\d{2})/.exec(time || ""); if (!m) return null;
+  const y = +m[1], mo = +m[2], d = +m[3];
+  return 2026 - y - ((mo > 9 || (mo === 9 && d > 12)) ? 1 : 0);
+}
+async function findPhoto(p) {
+  if (PHOTO_CACHE.has(p.i)) return PHOTO_CACHE.get(p.i);
+  const job = (async () => {
+    const tries = [...new Set([p.full, p.alias.replace(/"[^"]*"\s*/g, ""), p.name.replace(/ \(.*\)$/, "")].filter(Boolean))];
+    for (const q of tries) {
+      const s = await getJSON(WD + "action=wbsearchentities&type=item&language=en&limit=7&search=" + encodeURIComponent(q));
+      const ids = (s.search || []).map(x => x.id); if (!ids.length) continue;
+      const e = await getJSON(WD + "action=wbgetentities&props=claims&ids=" + ids.join("|"));
+      for (const id of ids) {
+        const c = (e.entities[id] || {}).claims || {};
+        const isFootballer = (c.P106 || []).some(x => x.mainsnak?.datavalue?.value?.id === "Q937857");
+        const file = c.P18?.[0]?.mainsnak?.datavalue?.value;
+        const age = ageAtSnapshot(c.P569?.[0]?.mainsnak?.datavalue?.value?.time);
+        if (!isFootballer || !file || age == null || Math.abs(age - p.age) > 1) continue;
+        const info = await getJSON("https://commons.wikimedia.org/w/api.php?format=json&origin=*&action=query&prop=imageinfo&iiprop=url|extmetadata&iiurlwidth=320&titles=" + encodeURIComponent("File:" + file));
+        const ii = Object.values(info.query.pages)[0]?.imageinfo?.[0]; if (!ii?.thumburl) continue;
+        const strip = h => { const d = document.createElement("div"); d.innerHTML = h || ""; return d.textContent.trim().replace(/\s+/g, " "); };
+        return { src: ii.thumburl, page: ii.descriptionurl, artist: strip(ii.extmetadata?.Artist?.value).slice(0, 60) || "Unknown author", license: strip(ii.extmetadata?.LicenseShortName?.value) || "see file page" };
+      }
+    }
+    return null;
+  })().catch(() => null);
+  PHOTO_CACHE.set(p.i, job);
+  return job;
+}
+function showPhoto(t) {
+  const fig = document.getElementById("endphoto"); if (!fig) return;
+  const target = S.target;
+  findPhoto(t).then(ph => {
+    if (!ph || S.target !== target || !document.body.contains(fig)) return;
+    const img = new Image();
+    img.alt = t.name; img.referrerPolicy = "no-referrer";
+    img.onload = () => {
+      fig.innerHTML = "";
+      fig.append(img);
+      const cap = document.createElement("figcaption");
+      const a = document.createElement("a"); a.href = ph.page; a.target = "_blank"; a.rel = "noopener";
+      a.textContent = `Photo: ${ph.artist} · ${ph.license}`;
+      cap.append(a); fig.append(cap); fig.hidden = false;
+    };
+    img.src = ph.src;
+  });
+}
+
 function shareText() {
   const t = P[S.target], { won } = status();
   const sq = st => st === "hit" ? "🟩" : st === "near" ? "🟨" : "⬛";
@@ -142,12 +196,13 @@ function renderEnd(justFinished) {
   end.classList.toggle("lost", !won);
   const sub = won ? (S.guesses.length === 1 ? "First try. Unreal." : `Got it in ${S.guesses.length} of ${MAX} guesses.`)
     : forfeit ? `You forfeited after ${S.guesses.length} ${S.guesses.length === 1 ? "guess" : "guesses"}.` : `All ${MAX} guesses used.`;
-  end.innerHTML = `<h2 class="${won ? "win" : "loss"}">${won ? "Victory!" : "Defeat"}</h2><p class="sub">${sub}</p>
+  end.innerHTML = `<figure class="photo" id="endphoto" hidden></figure><h2 class="${won ? "win" : "loss"}">${won ? "Victory!" : "Defeat"}</h2><p class="sub">${sub}</p>
     <p>The card was <b>${esc(t.name)}</b>, ${t.ovr} ${t.pos}, ${esc(t.club)} (${esc(t.nation)}).</p>
     <div class="stats"><span><b>${st.played}</b>Played</span><span><b>${st.played ? Math.round(st.wins / st.played * 100) : 0}%</b>Won</span><span><b>${st.streak}</b>Streak</span><span><b>${st.best}</b>Best</span></div>
     <pre class="share" id="sharetxt">${shareText()}</pre>
     <div class="row"><button class="btn primary" id="copy">Copy result</button>${S.mode === "daily" ? `<button class="btn" id="tofree">Play unlimited</button>` : `<button class="btn" id="again">New card</button>`}</div>`;
   end.hidden = false;
+  showPhoto(t);
   document.getElementById("copy").onclick = async (e) => {
     const b = e.currentTarget;
     try { await navigator.clipboard.writeText(shareText()); b.textContent = "Copied"; }
