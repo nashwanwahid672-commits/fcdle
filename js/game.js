@@ -3,7 +3,8 @@
 const P = RAW.map((r, i) => ({ i, name: r[0], ovr: r[1], pos: r[2], club: r[3], league: r[4], nation: r[5], cont: r[6], age: r[7],
   pac: r[8], sho: r[9], pas: r[10], dri: r[11], def: r[12], phy: r[13], str: r[14], full: r[15] || "", alias: r[16] || "" }));
 { const seen = {}; P.forEach(p => seen[p.name] = (seen[p.name] || 0) + 1); P.forEach(p => { if (seen[p.name] > 1) p.name += " (" + p.club + ")"; p.names = fold(p.name + " " + p.full + " " + p.alias).replace(/["']/g, ""); p.key = p.names + " " + fold(p.club); }); }
-const MAX = 5;
+const MAX_NORMAL = 8, MAX_HARD = 5;
+function maxG() { return S && S.hard ? MAX_HARD : MAX_NORMAL; }
 const NEAR = 3;
 const NUM = ["ovr", "age", "pac", "sho", "pas", "dri", "def", "phy", "str"];
 const STATS = ["pac", "sho", "pas", "dri", "def", "phy"];
@@ -28,17 +29,17 @@ function newState(mode) {
   if (mode === "daily") {
     const k = todayKey(), saved = store.get("fcdle-daily", null);
     const pl = pool(80), target = pl[hash("fcdle:" + k) % pl.length].i;
-    if (saved && saved.date === k && saved.target === target) return { mode, date: k, target, guesses: saved.guesses, forfeit: !!saved.forfeit };
-    return { mode, date: k, target, guesses: [] };
+    if (saved && saved.date === k && saved.target === target) return { mode, date: k, target, guesses: saved.guesses, forfeit: !!saved.forfeit, hard: !!saved.hard };
+    return { mode, date: k, target, guesses: [], hard: document.getElementById("hard").checked };
   }
   const pl = pool(+document.getElementById("diff").value);
-  return { mode, target: pl[Math.floor(Math.random() * pl.length)].i, guesses: [] };
+  return { mode, target: pl[Math.floor(Math.random() * pl.length)].i, guesses: [], hard: document.getElementById("hard").checked };
 }
 function status() {
   const won = S.guesses.includes(S.target);
-  return { won, forfeit: !won && !!S.forfeit, over: won || !!S.forfeit || S.guesses.length >= MAX };
+  return { won, forfeit: !won && !!S.forfeit, over: won || !!S.forfeit || S.guesses.length >= maxG() };
 }
-function save() { if (S.mode === "daily") store.set("fcdle-daily", { date: S.date, target: S.target, guesses: S.guesses, forfeit: !!S.forfeit }); }
+function save() { if (S.mode === "daily") store.set("fcdle-daily", { date: S.date, target: S.target, guesses: S.guesses, forfeit: !!S.forfeit, hard: !!S.hard }); }
 
 function compare(g, t) {
   const c = {};
@@ -176,8 +177,8 @@ function showPhoto(t) {
 function shareText() {
   const t = P[S.target], { won } = status();
   const sq = st => st === "hit" ? "🟩" : st === "near" ? "🟨" : "⬛";
-  const hm = document.getElementById("hard").checked ? "*" : "";
-  const head = (S.mode === "daily" ? `FCdle #${dayNumber()} ` : `FCdle · Unlimited `) + `${won ? S.guesses.length : "X"}/${MAX}${hm}${status().forfeit ? " (forfeit)" : ""}`;
+  const hm = S.hard ? "*" : "";
+  const head = (S.mode === "daily" ? `FCdle #${dayNumber()} ` : `FCdle · Unlimited `) + `${won ? S.guesses.length : "X"}/${maxG()}${hm}${status().forfeit ? " (forfeit)" : ""}`;
   return head + "\n" + S.guesses.map(gi => { const c = compare(P[gi], t); return ["ovr", "pos", "nation", "club", "age", ...STATS, "str"].map(k => sq(c[k].st)).join(""); }).join("\n");
 }
 function recordResult() {
@@ -196,8 +197,8 @@ function renderEnd(justFinished) {
   const t = P[S.target];
   const { forfeit } = status();
   end.classList.toggle("lost", !won);
-  const sub = won ? (S.guesses.length === 1 ? "First try. Unreal." : `Got it in ${S.guesses.length} of ${MAX} guesses.`)
-    : forfeit ? `You forfeited after ${S.guesses.length} ${S.guesses.length === 1 ? "guess" : "guesses"}.` : `All ${MAX} guesses used.`;
+  const sub = won ? (S.guesses.length === 1 ? "First try. Unreal." : `Got it in ${S.guesses.length} of ${maxG()} guesses.`)
+    : forfeit ? `You forfeited after ${S.guesses.length} ${S.guesses.length === 1 ? "guess" : "guesses"}.` : `All ${maxG()} guesses used.`;
   end.innerHTML = `<figure class="photo" id="endphoto" hidden></figure><div class="endtext"><h2 class="${won ? "win" : "loss"}">${won ? "Victory!" : "Defeat"}</h2><p class="sub">${sub}</p>
     <p>The card was <b>${esc(t.name)}</b>, ${t.ovr} ${t.pos}, ${esc(t.club)} (${esc(t.nation)}).</p>
     <div class="stats"><span><b>${st.played}</b>Played</span><span><b>${st.played ? Math.round(st.wins / st.played * 100) : 0}%</b>Won</span><span><b>${st.streak}</b>Streak</span><span><b>${st.best}</b>Best</span></div>
@@ -218,7 +219,10 @@ function renderCount() {
   document.getElementById("ff").hidden = ov;
   document.getElementById("ff-ask").hidden = false; document.getElementById("ff-confirm").hidden = true;
   const { over } = status(), q = document.getElementById("q");
-  document.getElementById("count").innerHTML = over ? `<b>${S.guesses.length}</b>/${MAX} used` : `Guess <b>${S.guesses.length + 1}</b>/${MAX}`;
+  document.getElementById("count").innerHTML = over ? `<b>${S.guesses.length}</b>/${maxG()} used` : `Guess <b>${S.guesses.length + 1}</b>/${maxG()}`;
+  const hb = document.getElementById("hard"), locked = S.guesses.length > 0 && !over;
+  hb.disabled = locked; hb.closest("label").classList.toggle("locked", locked);
+  hb.closest("label").title = locked ? "Finish or forfeit this game to switch modes" : "Hard mode: 5 guesses and names only in search";
   q.disabled = over; q.placeholder = over ? (S.mode === "daily" ? "Come back tomorrow for a new card" : "Hit New card to play again") : "Type a player… e.g. Erling Haaland";
 }
 function render(fresh, justFinished) { renderCard(); renderRows(fresh); renderCount(); renderEnd(justFinished); }
@@ -283,5 +287,9 @@ document.getElementById("newgame").onclick = () => start("free");
 document.getElementById("diff").onchange = () => start("free");
 const hardBox = document.getElementById("hard");
 hardBox.checked = store.get("fcdle-hard", false);
-hardBox.onchange = () => { store.set("fcdle-hard", hardBox.checked); if (!sug.hidden) drawList(); q.focus(); };
+hardBox.onchange = () => {
+  store.set("fcdle-hard", hardBox.checked);
+  if (!S.guesses.length && !status().over) { S.hard = hardBox.checked; save(); render(null, false); }
+  if (!sug.hidden) drawList(); q.focus();
+};
 setMode("daily");

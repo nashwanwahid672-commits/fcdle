@@ -1,6 +1,6 @@
 # FCdle
 
-A daily Wordle-style football game: guess the mystery **EA SPORTS FC 27** card in five tries.
+A daily Wordle-style football game: guess the mystery **EA SPORTS FC 27** card in eight tries (five on Hard mode).
 
 Every guess is compared against the mystery card:
 
@@ -17,7 +17,7 @@ Numbers that aren't exact show ▲ or ▼ to say whether the mystery card is hig
 
 - **Daily** puzzle, the same card for everyone each day, drawn from 80+ OVR players
 - **Unlimited** mode with three pools: 84+, 80+ and 75+
-- **Hard mode**: search results show names only, with no rating, position, club or flag
+- **Hard mode**: 5 guesses instead of 8, and search results show names only, with no rating, position, club or flag. Locked once you make your first guess
 - Search by card name, first name or last name, with or without accents
 - **Forfeit** to reveal the answer (counts as a loss)
 - Shareable emoji result grid, plus win %, streak and best streak saved in the browser

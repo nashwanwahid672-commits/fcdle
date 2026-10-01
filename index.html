@@ -4,19 +4,19 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>FCdle</title>
-<meta name="description" content="A daily Wordle-style game: guess the mystery EA FC 27 card from Europe's top five leagues in five tries.">
+<meta name="description" content="A daily Wordle-style game: guess the mystery EA FC 27 card from Europe's top five leagues in eight tries, or five on Hard mode.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Instrument+Sans:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&display=swap&text=%F0%9F%87%A6%F0%9F%87%B1%F0%9F%87%A6%F0%9F%87%B2%F0%9F%87%A6%F0%9F%87%B4%F0%9F%87%A6%F0%9F%87%B7%F0%9F%87%A6%F0%9F%87%B9%F0%9F%87%A6%F0%9F%87%BA%F0%9F%87%A7%F0%9F%87%A6%F0%9F%87%A7%F0%9F%87%AA%F0%9F%87%A7%F0%9F%87%AB%F0%9F%87%A7%F0%9F%87%AC%F0%9F%87%A7%F0%9F%87%AE%F0%9F%87%A7%F0%9F%87%AF%F0%9F%87%A7%F0%9F%87%B7%F0%9F%87%A8%F0%9F%87%A6%F0%9F%87%A8%F0%9F%87%A9%F0%9F%87%A8%F0%9F%87%AB%F0%9F%87%A8%F0%9F%87%AC%F0%9F%87%A8%F0%9F%87%AD%F0%9F%87%A8%F0%9F%87%AE%F0%9F%87%A8%F0%9F%87%B1%F0%9F%87%A8%F0%9F%87%B2%F0%9F%87%A8%F0%9F%87%B3%F0%9F%87%A8%F0%9F%87%B4%F0%9F%87%A8%F0%9F%87%B7%F0%9F%87%A8%F0%9F%87%BB%F0%9F%87%A8%F0%9F%87%BF%F0%9F%87%A9%F0%9F%87%AA%F0%9F%87%A9%F0%9F%87%B0%F0%9F%87%A9%F0%9F%87%B4%F0%9F%87%A9%F0%9F%87%BF%F0%9F%87%AA%F0%9F%87%A8%F0%9F%87%AA%F0%9F%87%AC%F0%9F%87%AA%F0%9F%87%B8%F0%9F%87%AB%F0%9F%87%AE%F0%9F%87%AB%F0%9F%87%B7%F0%9F%87%AC%F0%9F%87%A6%F0%9F%87%AC%F0%9F%87%A7%F0%9F%87%AC%F0%9F%87%AA%F0%9F%87%AC%F0%9F%87%AD%F0%9F%87%AC%F0%9F%87%B2%F0%9F%87%AC%F0%9F%87%B3%F0%9F%87%AC%F0%9F%87%B6%F0%9F%87%AC%F0%9F%87%B7%F0%9F%87%AC%F0%9F%87%BC%F0%9F%87%AD%F0%9F%87%B7%F0%9F%87%AD%F0%9F%87%B9%F0%9F%87%AD%F0%9F%87%BA%F0%9F%87%AE%F0%9F%87%A9%F0%9F%87%AE%F0%9F%87%AA%F0%9F%87%AE%F0%9F%87%B1%F0%9F%87%AE%F0%9F%87%B6%F0%9F%87%AE%F0%9F%87%B8%F0%9F%87%AE%F0%9F%87%B9%F0%9F%87%AF%F0%9F%87%B2%F0%9F%87%AF%F0%9F%87%B4%F0%9F%87%AF%F0%9F%87%B5%F0%9F%87%B0%F0%9F%87%AA%F0%9F%87%B0%F0%9F%87%B2%F0%9F%87%B0%F0%9F%87%B7%F0%9F%87%B1%F0%9F%87%B9%F0%9F%87%B1%F0%9F%87%BA%F0%9F%87%B1%F0%9F%87%BE%F0%9F%87%B2%F0%9F%87%A6%F0%9F%87%B2%F0%9F%87%AA%F0%9F%87%B2%F0%9F%87%B0%F0%9F%87%B2%F0%9F%87%B1%F0%9F%87%B2%F0%9F%87%B7%F0%9F%87%B2%F0%9F%87%BD%F0%9F%87%B2%F0%9F%87%BF%F0%9F%87%B3%F0%9F%87%AA%F0%9F%87%B3%F0%9F%87%AC%F0%9F%87%B3%F0%9F%87%B1%F0%9F%87%B3%F0%9F%87%B4%F0%9F%87%B3%F0%9F%87%BF%F0%9F%87%B5%F0%9F%87%A6%F0%9F%87%B5%F0%9F%87%AA%F0%9F%87%B5%F0%9F%87%AD%F0%9F%87%B5%F0%9F%87%B1%F0%9F%87%B5%F0%9F%87%B9%F0%9F%87%B5%F0%9F%87%BE%F0%9F%87%B7%F0%9F%87%B4%F0%9F%87%B7%F0%9F%87%B8%F0%9F%87%B7%F0%9F%87%BA%F0%9F%87%B8%F0%9F%87%A6%F0%9F%87%B8%F0%9F%87%AA%F0%9F%87%B8%F0%9F%87%AE%F0%9F%87%B8%F0%9F%87%B0%F0%9F%87%B8%F0%9F%87%B1%F0%9F%87%B8%F0%9F%87%B3%F0%9F%87%B8%F0%9F%87%B7%F0%9F%87%B9%F0%9F%87%AC%F0%9F%87%B9%F0%9F%87%AD%F0%9F%87%B9%F0%9F%87%B3%F0%9F%87%B9%F0%9F%87%B7%F0%9F%87%B9%F0%9F%87%BF%F0%9F%87%BA%F0%9F%87%A6%F0%9F%87%BA%F0%9F%87%B8%F0%9F%87%BA%F0%9F%87%BE%F0%9F%87%BA%F0%9F%87%BF%F0%9F%87%BB%F0%9F%87%AA%F0%9F%87%BD%F0%9F%87%B0%F0%9F%87%BF%F0%9F%87%B2%F0%9F%8F%B4%F3%A0%81%A7%F3%A0%81%A2%F3%A0%81%A5%F3%A0%81%AE%F3%A0%81%A7%F3%A0%81%BF%F0%9F%8F%B4%F3%A0%81%A7%F3%A0%81%A2%F3%A0%81%B3%F3%A0%81%A3%F3%A0%81%B4%F3%A0%81%BF%F0%9F%8F%B4%F3%A0%81%A7%F3%A0%81%A2%F3%A0%81%B7%F3%A0%81%AC%F3%A0%81%B3%F3%A0%81%BF">
-<link rel="stylesheet" href="css/style.css?v=6">
+<link rel="stylesheet" href="css/style.css?v=7">
 </head>
 <body>
 <div class="wrap">
   <header class="top">
     <div class="brand">
       <h1>FC<span>dle</span></h1>
-      <p>Guess the mystery EA FC 27 card in five tries. Players from Europe's top five leagues, with launch ratings.</p>
+      <p>Guess the mystery EA FC 27 card in eight tries, or five on Hard mode. Players from Europe's top five leagues, with launch ratings.</p>
     </div>
     <div class="modes">
       <div class="seg" role="group" aria-label="Game mode">
@@ -46,7 +46,7 @@
           <input id="q" type="text" autocomplete="off" spellcheck="false" placeholder="Type a player… e.g. Erling Haaland" role="combobox" aria-expanded="false" aria-controls="sug" aria-autocomplete="list">
           <ul class="list" id="sug" role="listbox" hidden></ul>
         </div>
-        <div class="count" id="count">Guess <b>1</b>/5</div>
+        <div class="count" id="count">Guess <b>1</b>/8</div>
         <div class="ff" id="ff">
           <button class="btn" id="ff-ask">Forfeit</button>
           <span class="ff-confirm" id="ff-confirm" hidden>Reveal the answer and end this game?
@@ -80,7 +80,7 @@
   </footer>
 </div>
 
-<script src="data/players.js?v=6"></script>
-<script src="js/game.js?v=6"></script>
+<script src="data/players.js?v=7"></script>
+<script src="js/game.js?v=7"></script>
 </body>
 </html>
