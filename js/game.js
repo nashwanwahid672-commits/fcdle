@@ -60,11 +60,8 @@ function knowledge() {
   for (const gi of S.guesses) {
     const g = P[gi], c = compare(g, t);
     for (const k of NUM) {
+      // Only an exact guess reveals a value on the card; no deducing from arrows.
       if (c[k].st === "hit") K[k].lo = K[k].hi = g[k];
-      else if (c[k].dir === "up") K[k].lo = Math.max(K[k].lo ?? 0, g[k] + 1);
-      else K[k].hi = Math.min(K[k].hi ?? 99, g[k] - 1);
-      if (c[k].st === "near") { if (c[k].dir === "up") K[k].hi = Math.min(K[k].hi ?? 99, g[k] + NEAR); else K[k].lo = Math.max(K[k].lo ?? 0, g[k] - NEAR); }
-      if (c[k].st === "miss") { if (c[k].dir === "up") K[k].lo = Math.max(K[k].lo, g[k] + NEAR + 1); else K[k].hi = Math.min(K[k].hi, g[k] - NEAR - 1); }
     }
     if (c.pos.st === "hit") facts.pos = g.pos; else if (c.pos.st === "near") facts.group = GROUP[g.pos];
     if (c.nation.st === "hit") facts.nation = g.nation; else if (c.nation.st === "near") facts.cont = g.cont;
