@@ -1,4 +1,4 @@
-# Cardle 27
+# FCdle
 
 A daily Wordle-style football game: guess the mystery **EA SPORTS FC 27** card in five tries.
 
@@ -59,4 +59,4 @@ The daily puzzle picks a player by their row position, so changing the data chan
 - Player ratings: [EA SPORTS FC 27 Player Ratings](https://www.kaggle.com/datasets/mikedpad/ea-sports-fc27-player-ratings) by MikeDPad on Kaggle
 - Ages and nation continents: the [Footle](https://github.com/Akif-b-Atif/Football-wordle) project's cleaned dataset
 
-Cardle 27 is a fan-made project and is not affiliated with or endorsed by EA SPORTS. EA SPORTS FC is a trademark of Electronic Arts Inc.
+FCdle is a fan-made project and is not affiliated with or endorsed by EA SPORTS. EA SPORTS FC is a trademark of Electronic Arts Inc.

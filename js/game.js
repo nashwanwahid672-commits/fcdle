@@ -26,8 +26,8 @@ let S; // game state
 
 function newState(mode) {
   if (mode === "daily") {
-    const k = todayKey(), saved = store.get("cardle27v2-daily", null);
-    const pl = pool(80), target = pl[hash("cardle27:" + k) % pl.length].i;
+    const k = todayKey(), saved = store.get("fcdle-daily", null);
+    const pl = pool(80), target = pl[hash("fcdle:" + k) % pl.length].i;
     if (saved && saved.date === k && saved.target === target) return { mode, date: k, target, guesses: saved.guesses, forfeit: !!saved.forfeit };
     return { mode, date: k, target, guesses: [] };
   }
@@ -38,7 +38,7 @@ function status() {
   const won = S.guesses.includes(S.target);
   return { won, forfeit: !won && !!S.forfeit, over: won || !!S.forfeit || S.guesses.length >= MAX };
 }
-function save() { if (S.mode === "daily") store.set("cardle27v2-daily", { date: S.date, target: S.target, guesses: S.guesses, forfeit: !!S.forfeit }); }
+function save() { if (S.mode === "daily") store.set("fcdle-daily", { date: S.date, target: S.target, guesses: S.guesses, forfeit: !!S.forfeit }); }
 
 function compare(g, t) {
   const c = {};
@@ -121,11 +121,11 @@ function shareText() {
   const t = P[S.target], { won } = status();
   const sq = st => st === "hit" ? "🟩" : st === "near" ? "🟨" : "⬛";
   const hm = document.getElementById("hard").checked ? "*" : "";
-  const head = (S.mode === "daily" ? `Cardle 27 #${dayNumber()} ` : `Cardle 27 · Unlimited `) + `${won ? S.guesses.length : "X"}/${MAX}${hm}${status().forfeit ? " (forfeit)" : ""}`;
+  const head = (S.mode === "daily" ? `FCdle #${dayNumber()} ` : `FCdle · Unlimited `) + `${won ? S.guesses.length : "X"}/${MAX}${hm}${status().forfeit ? " (forfeit)" : ""}`;
   return head + "\n" + S.guesses.map(gi => { const c = compare(P[gi], t); return ["ovr", "pos", "nation", "club", "age", ...STATS, "str"].map(k => sq(c[k].st)).join(""); }).join("\n");
 }
 function recordResult() {
-  const key = S.mode === "daily" ? "cardle27v2-stats-daily" : "cardle27v2-stats-free";
+  const key = S.mode === "daily" ? "fcdle-stats-daily" : "fcdle-stats-free";
   const st = store.get(key, { played: 0, wins: 0, streak: 0, best: 0, last: null });
   const id = S.mode === "daily" ? S.date : null;
   if (id && st.last === id) return st;
@@ -136,7 +136,7 @@ function recordResult() {
 function renderEnd(justFinished) {
   const end = document.getElementById("end"), { won, over } = status();
   if (!over) { end.hidden = true; return; }
-  const st = justFinished ? recordResult() : store.get(S.mode === "daily" ? "cardle27v2-stats-daily" : "cardle27v2-stats-free", { played: 0, wins: 0, streak: 0, best: 0 });
+  const st = justFinished ? recordResult() : store.get(S.mode === "daily" ? "fcdle-stats-daily" : "fcdle-stats-free", { played: 0, wins: 0, streak: 0, best: 0 });
   const t = P[S.target];
   const { forfeit } = status();
   end.classList.toggle("lost", !won);
@@ -225,6 +225,6 @@ document.getElementById("m-free").onclick = () => setMode("free");
 document.getElementById("newgame").onclick = () => start("free");
 document.getElementById("diff").onchange = () => start("free");
 const hardBox = document.getElementById("hard");
-hardBox.checked = store.get("cardle27v2-hard", false);
-hardBox.onchange = () => { store.set("cardle27v2-hard", hardBox.checked); if (!sug.hidden) drawList(); q.focus(); };
+hardBox.checked = store.get("fcdle-hard", false);
+hardBox.onchange = () => { store.set("fcdle-hard", hardBox.checked); if (!sug.hidden) drawList(); q.focus(); };
 setMode("daily");

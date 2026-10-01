@@ -1,4 +1,4 @@
-"""Build data/players.js for Cardle 27.
+"""Build data/players.js for FCdle.
 
 Inputs (place both in scripts/input/):
   players_raw.csv  EA SPORTS FC 27 Player Ratings by MikeDPad (Kaggle), the full
